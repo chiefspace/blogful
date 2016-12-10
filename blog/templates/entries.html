@@ -1,0 +1,41 @@
+{% import "macros.html" as macros %}
+{% extends "base.html" %}
+{% block content %}
+
+{% for entry in entries %}
+{{ macros.render_entry(entry) }}
+{% endfor %}
+
+<form label="Limit Entries Per Page" name="Limit_Entries_Per_Page" action="{{ url_for('entries') }}" method="POST">
+    Limit posts per page by: <select name="Limit_Entries_Per_Page">
+        <option value="3">3</option>
+        <option value="8">8</option>
+        <option value="10">10</option>
+        <option value="20">20</option>  
+    </select>
+    <button type="submit">Submit</button>
+</form>
+
+<ul class="pager">
+    {% if has_next %}
+    <li class="previous" >
+    <a href="{{ url_for('entries', page=page + 1) }}">&larr; Older</a>
+    </li>
+    {% endif %}
+    {% if has_prev %}
+    <li class="next">
+    <a href="{{ url_for('entries', page=page - 1) }}">&rarr; Newer</a>
+    </li>
+    {% endif %}
+</ul>
+
+<ul class="pagination">
+	{% for i in range(total_pages|int): %}
+	{% if limit %}
+	<li><a href="{{ url_for('entries', page=(i+1)|string, limit=limit) }}">{{ i+1 }}</a>
+	{% else %}
+	<li><a href="{{ url_for('entries', page=(i+1)|string) }}">{{ i+1 }}</a>
+	{% endif %}
+	{% endfor %}
+	
+{% endblock %}
