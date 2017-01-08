@@ -1,6 +1,11 @@
 {% import "macros.html" as macros %}
-
 {% extends "base.html" %}
+
 {% block content %}
 {{macros.render_entry(entry)}}
+
+<a href="{{ entry.href }}/entry/{{ entry.id }}/edit">edit</a>
+<a href="{{ entry.href }}/entry/{{ entry.id }}/delete">delete</a>
+
+
 {% endblock %}

@@ -2,19 +2,32 @@
 {% extends "base.html" %}
 {% block content %}
 
-{% for entry in entries %}
-{{ macros.render_entry(entry) }}
-{% endfor %}
+<a href="{{ url_for('add_entry_get') }}" >Add Entry</a>
 
-<form label="Limit Entries Per Page" name="Limit_Entries_Per_Page" action="{{ url_for('entries') }}" method="POST">
-    Limit posts per page by: <select name="Limit_Entries_Per_Page">
-        <option value="3">3</option>
-        <option value="8">8</option>
-        <option value="10">10</option>
-        <option value="20">20</option>  
-    </select>
-    <button type="submit">Submit</button>
+<form class="form-inline">
+  <div class="form-group">
+    <div class="input-group">
+        <span class="input-group-addon">Limit blog entries per page by: </span>
+            <select name="limit" class="pagination">
+                <option value="{{ 3|int(3, base=10) }}">3</option>
+                <option value="{{ 8|int(8, base=10) }}">8</option>
+                <option value="{{ 10|int(10, base=10) }}">10</option>
+                <option value="{{ 20|int(20, base=10) }}">20</option>
+            </select>
+    </div>
+    <button type="submit" class="btn btn-default" method="POST" action="{{ url_for('entries', limit=limit) }}">Go</button>
+  </div>
 </form>
+
+{% if limit %}
+    {% for entry in entries %}
+    {{ macros.render_entry(entry, limit=limit) }}
+    {% endfor %}
+{% else %}
+    {% for entry in entries %}
+    {{ macros.render_entry(entry) }}
+    {% endfor %}
+{% endif %}
 
 <ul class="pager">
     {% if has_next %}
@@ -29,13 +42,4 @@
     {% endif %}
 </ul>
 
-<ul class="pagination">
-	{% for i in range(total_pages|int): %}
-	{% if limit %}
-	<li><a href="{{ url_for('entries', page=(i+1)|string, limit=limit) }}">{{ i+1 }}</a>
-	{% else %}
-	<li><a href="{{ url_for('entries', page=(i+1)|string) }}">{{ i+1 }}</a>
-	{% endif %}
-	{% endfor %}
-	
 {% endblock %}

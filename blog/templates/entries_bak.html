@@ -1,0 +1,51 @@
+{% import "macros.html" as macros %}
+{% extends "base.html" %}
+{% block content %}
+
+<form class="form-inline" method="POST" action="{{ url_for('entries') }}">
+  <div class="form-group">
+    <div class="input-group">
+        <span class="input-group-addon">Please select</span>
+            <select name="limit_entries_select" class="selectpicker form-control">
+              {% for o in data %}
+              <option value="{{ o.name }}">{{ o.name }}</option>
+              {% endfor %}
+            </select>
+    </div>
+    <button type="submit" class="btn btn-default">Go</button>
+  </div>
+</form>
+
+<ul class="pager">
+	{% if has_next %}
+	<li class="previous" >
+		{% if limit %}
+		<a href="{{ url_for('entries', page=page + 1, limit=limit) }}">&larr; Older</a>
+		{% else %}
+		<a href="{{ url_for('entries', page=page + 1) }}">&larr; Older</a>
+		{% endif %}
+
+	</li>
+	{% endif %}
+	{% if has_prev %}
+	<li class="next">
+		{% if limit %}
+		<a href="{{ url_for('entries', page=page - 1, limit=limit) }}">&rarr; Newer</a>
+		{% else %}
+		<a href="{{ url_for('entries', page=page - 1) }}">&rarr; Newer</a>
+		{% endif %}
+	</li>
+	{% endif %}
+</ul>
+
+<ul class="pagination">
+	{% for i in range(total_pages|int) %}
+	{% if limit %}
+	<li><a href="{{ url_for('entries', page=(i+1)|string, limit=limit) }}">{{ i+1 }}</a>
+	{% else %}
+	<li><a href="{{ url_for('entries', page=(i+1)|string) }}">{{ i+1 }}</a>
+	{% endif %}
+	{% endfor %}
+</ul>
+
+{% endblock %}

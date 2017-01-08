@@ -1,9 +1,9 @@
 {% macro render_entry(entry) %}
 <div class="row">
     <div class="col-md-2 text-right metadata">
-        <ul class="list-unstyled">
+        <ul class="pagination">
             <li>
-                {{ entry.datetime | dateformat("%d/%m/%y") }}
+                {{ entry.datetime | dateformat("%m/%d/%y") }}
             </li>
         </ul>
     </div>
@@ -11,7 +11,7 @@
         <h1>
             <a href="{{ entry.href }}/entry/{{ entry.id }}">{{ entry.title }}</a>
         </h1>
-        {{ entry.content | markdown }}
+        {{ entry.content | safe }}
     </div>
 </div>
 {% endmacro %}
