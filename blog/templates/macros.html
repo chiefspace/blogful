@@ -4,6 +4,7 @@
         <ul class="pagination">
             <li>
                 {{ entry.datetime | dateformat("%m/%d/%y") }}
+                {{ entry.author.name }}
             </li>
         </ul>
     </div>
@@ -12,6 +13,7 @@
             <a href="{{ entry.href }}/entry/{{ entry.id }}">{{ entry.title }}</a>
         </h1>
         {{ entry.content | safe }}
+        {{ entry.author.name }}
     </div>
 </div>
 {% endmacro %}

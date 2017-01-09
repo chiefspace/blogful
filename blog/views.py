@@ -52,12 +52,15 @@ def add_entry_get():
     
 from flask import request, redirect, url_for
 
+from flask.ext.login import current_user
+
 @app.route("/entry/add", methods=["POST"])
 @login_required
 def add_entry_post():
     entry = Entry(
         title=request.form["title"],
         content=request.form["content"],
+        author=current_user
     )
     session.add(entry)
     session.commit()
