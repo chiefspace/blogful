@@ -5,6 +5,7 @@ from . import app
 from .database import session, Entry
 
 from flask.ext.login import login_required
+from werkzeug.exceptions import Forbidden
 
 @app.route("/", methods=["GET","POST"])
 @app.route("/page/<int:page>", methods=["GET","POST"])
@@ -72,11 +73,17 @@ def single_entry(entry_id):
 	return render_template("single_entry.html",entry=entry)
 	
 @app.route("/entry/<int:entry_id>/edit", methods=["GET"])
+@login_required
 def edit_entry_get(entry_id):
     entry = session.query(Entry).get(entry_id)
+    
+    if not all([entry.author, current_user]) or entry.author.id != current_user.id:
+        raise Forbidden('Only entry author can edit their own entry.')
+    
     return render_template("edit_entry.html", entry=entry)
 
 @app.route("/entry/<int:entry_id>/edit", methods=["POST"])
+@login_required
 def edit_entry_entry(entry_id):
     if  request.method == "POST":
         entry = session.query(Entry).get(entry_id)
@@ -90,13 +97,19 @@ def edit_entry_entry(entry_id):
     return render_template("edit_entry.html", entry=entry)
     
 @app.route("/entry/<int:entry_id>/delete", methods=["GET","POST"])
+@login_required
 def delete_entry_get(entry_id=1):
     entry = session.query(Entry).get(entry_id)
+    
+    if not all([entry.author, current_user]) or entry.author.id != current_user.id:
+        raise Forbidden('Only entry author can delete their own entry.')
+    
     if entry is None:
         abort(404)
     return render_template("delete_entry.html", entry=entry)
 
 @app.route("/delete/confirmation/<int:entry_id>", methods=["GET"])
+@login_required
 def delete_entry_confirmed(entry_id):
     entry = session.query(Entry).get(entry_id)
     if entry is None:
@@ -110,7 +123,7 @@ def login_get():
     return render_template("login.html")
     
 from flask import flash
-from flask.ext.login import login_user
+from flask.ext.login import login_user, logout_user
 from werkzeug.security import check_password_hash
 from .database import User
 
@@ -125,4 +138,14 @@ def login_post():
 
     login_user(user)
     return redirect(request.args.get('next') or url_for("entries"))
+        
+        
+@app.route("/logout", methods=["GET", "POST"])
+@login_required
+def logout():
+    """Logout the current user."""
+    user = current_user
+    user.authenticated = False
+    logout_user()
+    return redirect(url_for("login_get"))
     
