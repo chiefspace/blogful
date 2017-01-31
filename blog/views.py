@@ -93,8 +93,8 @@ def edit_entry_entry(entry_id):
         session.commit()
         return redirect(url_for("entries"))
         
-    entry = session.query(Entry).get(entry_id)
-    return render_template("edit_entry.html", entry=entry)
+#    entry = session.query(Entry).get(entry_id)
+#    return render_template("edit_entry.html", entry=entry)
     
 @app.route("/entry/<int:entry_id>/delete", methods=["GET","POST"])
 @login_required
@@ -102,7 +102,7 @@ def delete_entry_get(entry_id=1):
     entry = session.query(Entry).get(entry_id)
     
     if not all([entry.author, current_user]) or entry.author.id != current_user.id:
-        raise Forbidden('Only entry author can delete their own entry.')
+        raise Forbidden('Only entry author can d their own entry.')
     
     if entry is None:
         abort(404)

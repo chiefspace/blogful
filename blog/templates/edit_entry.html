@@ -5,8 +5,21 @@
     Edit Entry
 </h1>
 
+<script type="text/javascript">
+function save(){
+var text_to_save=document.getElementById('content').value;
+localStorage.setItem("text", text_to_save); // save the item
+}
+
+function retrieve(){
+var text=localStorage.getItem("text"); // retrieve
+document.getElementById('form-group').innerHTML = text; // display
+}
+
+</script>
+
 <form role="form" method="POST">
-    <div class="form-group">
+    <div class="form-group" id="form-group">
         <label for="title">Title</label>
         <input type="text" class="form-control" id="title" name="title" value="{{ entry.title }}" required>
     </div>
