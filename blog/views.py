@@ -1,5 +1,8 @@
-from flask import render_template, abort, redirect, request, url_for
+import os
+from flask import render_template, abort, redirect, request, url_for, \
+    send_from_directory
 import mistune
+import uuid
 
 from . import app
 from .database import session, Entry
@@ -148,4 +151,40 @@ def logout():
     user.authenticated = False
     logout_user()
     return redirect(url_for("login_get"))
+    
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = '/home/ubuntu/workspace/blog/tmp'
+ALLOWED_EXTENSIONS = set(['jpg','JPG','png','PNG'])
+
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+@app.route("/upload", methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filename = str(uuid.uuid4()) + file.filename
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('index'))
+    return """
+    <!doctype html>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    <form action="" method=post enctype=multipart/form-data>
+      <p><input type=file name=file>
+         <input type=submit value=Upload>
+    </form>
+    <p>%s</p>
+    """ % "<br>".join(os.listdir(app.config['UPLOAD_FOLDER']))
+    
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
     

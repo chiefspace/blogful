@@ -24,13 +24,13 @@ class TestViews(unittest.TestCase):
         session.add(self.user)
         session.commit()
         
-    def simulate_login(self):
+    def test_simulate_login(self):
         with self.client.session_transaction() as http_session:
             http_session["user_id"] = str(self.user.id)
             http_session["_fresh"] = True
 
     def test_add_entry(self):
-        self.simulate_login()
+        self.test_simulate_login()
 
         response = self.client.post("/entry/add", data={
             "title": "Test Entry",

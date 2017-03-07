@@ -30,7 +30,7 @@ class TestViews(unittest.TestCase):
         self.process = multiprocessing.Process(target=app.run,
                                                kwargs={"port": 8080})
         self.process.start()
-        time.sleep(1)
+        time.sleep(2)
         
     def test_login_correct(self):
         self.browser.visit("http://127.0.0.1:8080/login")
