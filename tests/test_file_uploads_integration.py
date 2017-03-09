@@ -2,10 +2,10 @@ import os
 import unittest
 from urllib.parse import urlparse
 
-from io import StringIO
+from io import StringIO, BytesIO
 
 from flask import Request
-from werkzeug import FileStorage
+from werkzeug.datastructures import FileStorage
 from werkzeug.datastructures import MultiDict
 
 from werkzeug.security import generate_password_hash
@@ -99,7 +99,7 @@ class TestViews(unittest.TestCase):
 
         # Loop over some files and the status codes that we are expecting
         for filename, status_code in \
-                (('foo.png', 201), ('foo.pdf', 201), ('foo.doc', 201),
+                (('foo.png', 302), ('foo.pdf', 400), ('foo.doc', 400),
                  ('foo.py', 400), ('foo', 400)):
 
             # The reason why we are defining it in here and not outside
@@ -122,7 +122,7 @@ class TestViews(unittest.TestCase):
             rv = test_client.post(
                 '/upload',
                 data=dict(
-                    file=(StringIO('Foo bar baz'), filename),
+                    file=(BytesIO('Foo bar baz'), filename),
                 ))
             self.assertEqual(rv.status_code, status_code)
 

@@ -1,6 +1,6 @@
 import os
 from flask import render_template, abort, redirect, request, url_for, \
-    send_from_directory
+    send_from_directory, flash
 import mistune
 import uuid
 
@@ -165,25 +165,22 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 @app.route("/upload", methods=['GET', 'POST'])
-def index():
+def upload():
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             filename = str(uuid.uuid4()) + file.filename
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('index'))
-    return """
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-    <p>%s</p>
-    """ % "<br>".join(os.listdir(app.config['UPLOAD_FOLDER']))
-    
+            flash("file saved")
+#            return redirect(url_for('upload'))
+        else:
+            flash("file extension not allowed")
+            return redirect(url_for("upload"))
+            
+    uploads = os.listdir(app.config['UPLOAD_FOLDER'])
+    return render_template("upload.html", uploads=uploads)
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
