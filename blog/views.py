@@ -154,7 +154,7 @@ def logout():
     
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = '/home/ubuntu/workspace/blog/tmp'
+UPLOAD_FOLDER = '/tmp/'
 ALLOWED_EXTENSIONS = set(['jpg','JPG','png','PNG'])
 
 
