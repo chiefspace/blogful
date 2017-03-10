@@ -6,11 +6,11 @@ install: python3 -m pip install -r requirements.txt
 env:
     - CONFIG_PATH=blog.config.TravisConfig
 before_script:
-    - sudo psql -c 'CREATE DATABASE "blogful-test";' -U postgres
-    - sudo psql -c 'CREATE USER ubuntu;' -U postgres
-    - sudo psql -c 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ubuntu;' -U postgres
-    - sudo psql -c 'GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO ubuntu;' -U postgres
-    - sudo createdb ubuntu
+    - psql -c 'CREATE DATABASE "blogful-test";' -U postgres
+    - psql -c 'CREATE USER ubuntu;' -U postgres
+    - psql -c 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ubuntu;' -U postgres
+    - psql -c 'GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO ubuntu;' -U postgres
+    - createdb ubuntu
 
 script:
     - PYTHONPATH=. python3 tests/test_filters.py
