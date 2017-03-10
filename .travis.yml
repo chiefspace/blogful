@@ -8,8 +8,9 @@ env:
 before_script:
     - sudo psql -c 'CREATE DATABASE "blogful-test";' -U postgres
     - sudo psql -c 'CREATE USER ubuntu;' -U postgres
-#    - sudo psql -c 'GRANT ALL PRIVILEGES ON "blogful-test.users" TO ubuntu;' -U postgres
-#    - createdb ubuntu
+    - createdb ubuntu
+    - sudo psql -c 'GRANT ALL PRIVILEGES ON "blogful-test" TO ubuntu;' -U postgres
+
 script:
     - PYTHONPATH=. python3 tests/test_filters.py
     - PYTHONPATH=. python3 tests/test_views_integration.py
