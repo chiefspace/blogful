@@ -22,7 +22,14 @@ class TestViews(unittest.TestCase):
         self.user = User(name="Alice", email="alice@example.com",
                          password=generate_password_hash("test"))
         session.add(self.user)
-        session.commit()
+#        session.commit()
+        try:
+            session.commit()
+        except:
+            session.rollback()
+            raise
+        finally:
+            session.close()  # optional, depends on use case
         
     def test_simulate_login(self):
         with self.client.session_transaction() as http_session:
