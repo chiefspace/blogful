@@ -10,6 +10,7 @@ before_script:
     - sudo psql -c 'CREATE USER ubuntu;' -U postgres
     - createdb ubuntu
     - sudo psql -c 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ubuntu;' -U postgres
+    - sudo psql -c 'GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO ubuntu;' -U postgres
 
 script:
     - PYTHONPATH=. python3 tests/test_filters.py
