@@ -6,11 +6,10 @@ install: python3 -m pip install -r requirements.txt
 env:
     - CONFIG_PATH=blog.config.TravisConfig
 before_script:
-    - psql -c 'create database "blogful-test";' -U postgres
-    - sudo sudo -u postgres createuser ubuntu
+    - sudo sudo psql -c 'create database "blogful-test";' -U postgres
 script:
     - PYTHONPATH=. python3 tests/test_filters.py
     - PYTHONPATH=. python3 tests/test_views_integration.py
     - PYTHONPATH=. python3 tests/test_views_acceptance.py
-    - PYTHONPATH=. python3 tests/test_file_uploads.py
+    - PYTHONPATH=. python3 tests/test_binary_file_uploads.py
     # Add any other tests here
