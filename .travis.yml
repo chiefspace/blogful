@@ -7,7 +7,7 @@ env:
     - CONFIG_PATH=blog.config.TravisConfig
 before_script:
     - sudo psql -c 'CREATE DATABASE "blogful-test";' -U postgres
-    - sudo sudo psql -c "CREATE USER ubuntu WITH PASSWORD "thinkful";" -U postgres
+    - sudo sudo psql -c "CREATE USER ubuntu with createdb;" -U postgres
     - createdb ubuntu
 script:
     - PYTHONPATH=. python3 tests/test_filters.py
