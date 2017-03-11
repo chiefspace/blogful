@@ -57,6 +57,7 @@ class TestViews(unittest.TestCase):
 
     def tearDown(self):
         """ Test teardown """
+        session.expunge_all()
         session.close()
         # Remove the tables and their data from the database
         Base.metadata.drop_all(engine)
