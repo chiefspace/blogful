@@ -29,6 +29,7 @@ class TestViews(unittest.TestCase):
             session.rollback()
             raise
         finally:
+            session.expunge_all()
             session.close()  # optional, depends on use case
         
     def test_simulate_login(self):
