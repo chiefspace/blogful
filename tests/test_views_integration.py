@@ -31,6 +31,7 @@ class TestViews(unittest.TestCase):
         finally:
             session.expunge_all()
             session.close()  # optional, depends on use case
+        session.commit()
         
     def test_simulate_login(self):
         with self.client.session_transaction() as http_session:
